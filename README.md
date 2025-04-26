@@ -1,0 +1,1 @@
+# gcp-bin-auth-test
