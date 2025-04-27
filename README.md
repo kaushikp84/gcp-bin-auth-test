@@ -1,1 +1,2 @@
 # gcp-bin-auth-test
+this is a test for cloud run with github action
