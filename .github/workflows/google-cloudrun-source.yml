@@ -31,8 +31,7 @@ name: 'Deploy to Cloud Run from Source'
 
 on:
   push:
-    branches:
-      - '"main"'
+    branches: [ "main" ]
 
 env:
   PROJECT_ID: 'bin-auth-test-458012' # TODO: update to your Google Cloud project ID
@@ -41,7 +40,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: 'ubuntu'
+    runs-on: 'ubuntu-latest'
 
     permissions:
       contents: 'read'
