@@ -99,7 +99,8 @@ jobs:
           gcloud beta container binauthz attestations sign-and-create \
             --artifact-url="${{ env.IMAGE_NAME }}:good" \
             --attestor="projects/${{ env.PROJECT_ID }}/attestors/${{ env.ATTESTOR_ID }}" \
-            --keyversion="projects/${{ env.PROJECT_ID }}/locations/${{ env.KEY_LOCATION }}/keyRings/${{ env.KEYRING }}/cryptoKeys/${{ env.KEY_NAME }}/cryptoKeyVersions/${{ env.KEY_VERSION }}"
+            --keyversion="projects/${{ env.PROJECT_ID }}/locations/${{ env.KEY_LOCATION }}/keyRings/${{ env.KEYRING }}/cryptoKeys/${{ env.KEY_NAME }}/cryptoKeyVersions/${{ env.KEY_VERSION }}" \
+            --quiet
       
       - name: 'Deploy to Cloud Run'
         uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
