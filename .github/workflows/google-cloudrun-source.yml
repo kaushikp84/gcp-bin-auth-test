@@ -106,6 +106,7 @@ jobs:
           # Create attestation using the image digest
           gcloud beta container binauthz attestations sign-and-create \
             --artifact-url="${{ env.IMAGE_NAME }}@${DIGEST}" \
+            --project="${{ env.PROJECT_ID }}" \
             --attestor="${{ env.ATTESTOR_ID }}" \
             --attestor-project="${{ env.PROJECT_ID }}" \
             --keyversion-project="${{ env.PROJECT_ID }}" \
