@@ -56,7 +56,7 @@ jobs:
           SCAN_ID=$(gcloud artifacts docker images scan \
             ${{ env.IMAGE_NAME }} \
             --location us \
-            --project=${{ env.PROJECT_ID }}
+            --project=${{ env.PROJECT_ID }} \
             --quiet \
             --format="value(response.scan)")
           echo "SCAN_ID=$SCAN_ID" >> $GITHUB_ENV
