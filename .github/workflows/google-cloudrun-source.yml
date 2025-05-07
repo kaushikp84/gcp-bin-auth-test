@@ -101,6 +101,7 @@ jobs:
           # Get the image digest for the container
           DIGEST=$(gcloud container images describe ${{ env.IMAGE_NAME }}:good \
             --format='get(image_summary.digest)')
+          gcloud components install beta --quiet
           
           # Create attestation using the image digest
           gcloud beta container binauthz attestations sign-and-create \
