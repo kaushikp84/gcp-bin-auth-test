@@ -7,4 +7,6 @@ COPY . ./
 RUN pip3 install Flask==2.1.0
 RUN pip3 install gunicorn==20.1.0
 
-CMD exec gunicorn --bind :\$PORT --workers 1 --threads 8 main:app
+EXPOSE 8080
+
+CMD ["gunicorn", "main:app", "--bind", "0.0.0.0:${PORT}"]
