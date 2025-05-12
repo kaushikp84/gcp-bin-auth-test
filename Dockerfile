@@ -9,5 +9,5 @@ RUN pip3 install gunicorn==20.1.0
 
 EXPOSE 8080
 
-CMD exec gunicorn --bind :\$PORT main:app
+CMD exec gunicorn --bind :\8080 main:app
 
