@@ -67,24 +67,17 @@ jobs:
       - name: 'Check severity of vulnerabilities'
         id: 'severity-check'
         run: |
-          # First, let's save the full output to examine
-          echo "Fetching vulnerability data..."
-          VULN_OUTPUT=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} --format="json")
+          # Check only for HIGH vulnerabilities in package types other than OS
+          HIGH_NON_OS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
+            --format="json" | jq -c '.[] | select(.vulnerability.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS")')
           
-          # Debug: Print the number of total vulnerabilities
-          echo "Total vulnerabilities found: $(echo $VULN_OUTPUT | jq '. | length')"
-          
-          # Check specifically for CRITICAL vulnerabilities in non-OS packages
-           CRITICAL_COUNT=$(echo $VULN_OUTPUT | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS"))] | length')
-          echo "Critical non-OS vulnerabilities count: $CRITICAL_COUNT"
-          
-          # If there are critical vulnerabilities, show details and fail
-          if [ "$CRITICAL_COUNT" -gt 0 ]; then
-            echo "Critical vulnerabilities found"
+          if [ -n "$HIGH_NON_OS" ]; then
+            echo "Failed vulnerability check for HIGH level in non-OS packages"
             exit 1
           else
-            echo "No CRITICAL vulnerability found in non-OS packages, congrats!"
+            echo "No HIGH vulnerability found, congrats!"
           fi
+         
       
       - name: 'Retag Docker image'
         if: success()
