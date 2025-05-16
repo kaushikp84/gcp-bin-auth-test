@@ -75,7 +75,7 @@ jobs:
           echo "Total vulnerabilities found: $(echo $VULN_OUTPUT | jq '. | length')"
           
           # Check specifically for CRITICAL vulnerabilities in non-OS packages
-           CRITICAL_COUNT=$(echo $VULN_OUTPUT | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "CRITICAL" and .vulnerability.packageIssue.packageType != "OS"))] | length')
+           CRITICAL_COUNT=$(echo $VULN_OUTPUT | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS"))] | length')
           echo "Critical non-OS vulnerabilities count: $CRITICAL_COUNT"
           
           # If there are critical vulnerabilities, show details and fail
