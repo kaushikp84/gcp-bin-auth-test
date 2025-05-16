@@ -69,7 +69,7 @@ jobs:
         run: |
           # Check only for HIGH vulnerabilities in package types other than OS
           HIGH_NON_OS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
-            --format="json" | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "CRITICAL" and .vulnerability.packageIssue.packageType != "OS" ))] ')
+            --format="json" | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS" ))] ')
           echo "Total high vulnerabilities found: $(echo $HIGH_NON_OS)"
           vul_len=$(echo $HIGH_NON_OS | jq '. | length')
 
