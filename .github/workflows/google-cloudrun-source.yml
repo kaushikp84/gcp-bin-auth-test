@@ -69,7 +69,7 @@ jobs:
         run: |
           # Check only for HIGH vulnerabilities in package types other than OS
           HIGH_NON_OS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
-            --format="json" | jq -c '.[] | select(.vulnerability.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS")')
+            --format="json" | jq -c '.[] | select(.vulnerability.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != OS)')
           
           if [ -n "$HIGH_NON_OS" ]; then
             echo "Failed vulnerability check for HIGH level in non-OS packages"
