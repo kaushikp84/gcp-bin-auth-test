@@ -71,9 +71,10 @@ jobs:
           HIGH_NON_OS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
             --format="json" | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "CRITICAL" and .vulnerability.packageIssue.packageType != "OS" ))] ')
           echo "Total high vulnerabilities found: $(echo $HIGH_NON_OS)"
+          vul_len=$(echo $HIGH_NON_OS | jq '. | length')
 
           
-          if [ -n "$HIGH_NON_OS" ]; then
+          if [ "$vul_len" -gt 0 ]; then
             echo "Failed vulnerability check for HIGH level in non-OS packages"
             exit 1
           else
