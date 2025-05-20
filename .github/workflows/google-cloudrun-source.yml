@@ -67,20 +67,19 @@ jobs:
       - name: 'Check severity of vulnerabilities'
         id: 'severity-check'
         run: |
-          # Check only for HIGH vulnerabilities in package types other than OS
-          VULNS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
-            --format="table[no-heading](vulnerability.effectiveSeverity,vulnerability.packageIssue[0].packageType)")
+          # Check only for critical vulnerabilities with fix.
+          CRITICAL_WITH_FIX=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
+            --format="json" | jq -c '[.[] | select(
+              .vulnerability.effectiveSeverity == "CRITICAL" and
+              .vulnerability.fixAvailable == true
+            )] | length')
     
-          # Count CRITICAL non-OS vulnerabilities (only entries that have both conditions)
-          CRITICAL_NON_OS=$(echo "$VULNS" | grep "CRITICAL" | grep -v "CRITICAL.*OS" || true)
-            echo "Found $CRITICAL_NON_OS non-OS vulnerabilities"
-    
-          if [ -n "$CRITICAL_NON_OS" ]; then
-            echo "Failed vulnerability check for CRITICAL level in non-OS packages"
-            echo "Problematic vulnerabilities:"
+          if [ "$CRITICAL_WITH_FIX" -gt 0 ]; then
+            echo "Found $CRITICAL_WITH_FIX CRITICAL vulnerabilities with fixes available"
+            echo "These vulnerabilities should be addressed immediately"
             exit 1
           else
-            echo "No CRITICAL vulnerabilities found in non-OS packages, congrats!"
+            echo "No CRITICAL vulnerabilities with fixes found, congrats!"
           fi
          
       
