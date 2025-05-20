@@ -67,10 +67,10 @@ jobs:
       - name: 'Check severity of vulnerabilities'
         id: 'severity-check'
         run: |
-          # Check only for critical vulnerabilities with fix.
+          # Check only for high vulnerabilities with fix.
           CRITICAL_WITH_FIX=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
             --format="json" | jq -c '[.[] | select(
-              .vulnerability.effectiveSeverity == "CRITICAL" and
+              .vulnerability.effectiveSeverity == "HIGH" and
               .vulnerability.fixAvailable == true
             )] | length')
     
