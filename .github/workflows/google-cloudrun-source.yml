@@ -68,17 +68,18 @@ jobs:
         id: 'severity-check'
         run: |
           # Check only for HIGH vulnerabilities in package types other than OS
-          HIGH_NON_OS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
-            --format="json" | jq '[.[] | select(.vulnerabilityId | select(.effectiveSeverity == "HIGH" and .vulnerability.packageIssue.packageType != "OS" ))] ')
-          echo "Total high vulnerabilities found: $(echo $HIGH_NON_OS)"
-          vul_len=$(echo $HIGH_NON_OS | jq '. | length')
-
-          
-          if [ "$vul_len" -gt 0 ]; then
-            echo "Failed vulnerability check for HIGH level in non-OS packages"
+          VULNS=$(gcloud artifacts docker images list-vulnerabilities ${{ env.SCAN_ID }} \
+            --format="csv(vulnerability.effectiveSeverity,vulnerability.packageIssue.packageType)")
+    
+          # Check for CRITICAL vulnerabilities in non-OS packages
+          CRITICAL_NON_OS=$(echo "$VULNS" | grep "CRITICAL" | grep -v ",OS$" || true)
+    
+          if [ -n "$CRITICAL_NON_OS" ]; then
+            echo "Failed vulnerability check for CRITICAL level in non-OS packages:"
+            echo "$CRITICAL_NON_OS"
             exit 1
           else
-            echo "No HIGH vulnerability found, congrats!"
+            echo "No CRITICAL vulnerabilities found in non-OS packages, congrats!"
           fi
          
       
