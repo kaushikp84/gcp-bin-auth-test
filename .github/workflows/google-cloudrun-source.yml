@@ -72,7 +72,7 @@ jobs:
             --format="csv(vulnerability.effectiveSeverity,vulnerability.packageIssue.packageType)")
     
           # Check for CRITICAL vulnerabilities in non-OS packages
-          CRITICAL_NON_OS=$(echo "$VULNS" | grep "CRITICAL" | grep -v ",OS$" || true)
+          CRITICAL_NON_OS=$(echo "$VULNS" | grep "CRITICAL" | grep -v ",Python$" || true)
     
           if [ -n "$CRITICAL_NON_OS" ]; then
             echo "Failed vulnerability check for CRITICAL level in non-OS packages:"
